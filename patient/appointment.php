@@ -13,8 +13,13 @@ $res = mysqli_query($con,"SELECT a.*, b.* FROM doctorschedule a INNER JOIN patie
 WHERE a.scheduleDate='$appdate' AND scheduleId=$appid AND b.icPatient=$session");
 $userRow=mysqli_fetch_array($res,MYSQLI_ASSOC);
 
+$sql = "SELECT * FROM `body_parts`";
+$result = $con->query($sql);
 
-	
+$sql2 = "SELECT * FROM `symptoms`";
+$result2 = $con->query($sql2);
+
+// exit;
 //INSERT
 if (isset($_POST['appointment'])) {
 $patientIc = mysqli_real_escape_string($con,$userRow['icPatient']);
@@ -171,10 +176,33 @@ header("Location: patient/patient.php");
 												</div>
 											</div>
 											
+											
 											<div class="form-group">
-												<label for="recipient-name" class="control-label">Symptom:</label>
-												<input type="text" class="form-control" name="symptom" required>
+												<label for="recipient-name" class="control-label">Body Parts:</label> <br />
+<!--												<input type="text" class="form-control" name="symptom" required>-->
+                                                <?php 
+												if ($result->num_rows > 0) {
+													  // output data of each row
+													  while($row = $result->fetch_assoc()) {?>
+													  <label><input class="body_part" name="body_part_name[]" value="<?= $row["id"];?>"type="checkbox"> <?= $row["body_part_name"];?></label>
+												<?php }
+													}
+												?>
 											</div>
+											
+											<div class="form-group">
+												<label for="recipient-name" class="control-label">Symptom:</label> <br />
+<!--												<input type="text" class="form-control" name="symptom" required>-->
+                                                <?php 
+												if ($result2->num_rows > 0) {
+													  // output data of each row
+													  while($row2 = $result2->fetch_assoc()) {?>
+													  <label><input class="symptom" name="symptom_name[]" value="<?= $row2["id"];?>"type="checkbox"> <?= $row2["symptom_details"];?></label>
+												<?php }
+													}
+												?>
+											</div>
+											
 											<div class="form-group">
 												<label for="message-text" class="control-label">Comment:</label>
 												<textarea class="form-control" name="comment" required></textarea>
@@ -193,6 +221,20 @@ header("Location: patient/patient.php");
 					<!-- USER PROFILE ROW END-->
 					<!-- end -->
 					<script src="assets/js/jquery.js"></script>
-			<script src="assets/js/bootstrap.min.js"></script>
+					<script src="assets/js/bootstrap.min.js"></script>
+					<script>
+						$(document).ready(function(){
+							// $('input[name="body_part_name[]"]').click(function(){
+								// var atLeastOneIsChecked = $('input[name="body_part_name[]"]:checked').length > 0;
+								// if (atLeastOneIsChecked) { 
+									// alert("Check box in Checked"); 
+								// } else { 
+									// alert("Check box is Unchecked"); 
+								// } 
+							// });
+							
+						});
+					</script>
+					
 				</body>
 			</html>
